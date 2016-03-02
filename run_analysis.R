@@ -17,9 +17,6 @@ subject <- rbind(subjectTest, read.table("train/subject_train.txt"))
 head(features)
 colnames(X) <- c(make.names(features$V2, unique = TRUE))
 
-#Select mean and sd columns
-mean_and_std <- select(X, contains("mean"), contains("std"))
-
 #Label activities
 activityLabel <- c(1:6)
 activityName <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING")
@@ -35,6 +32,9 @@ XYSubject <- bind_cols(subject, XYActivity)
 
 #Clean up the data, turn cols into values
 tidyXYSubject <- gather(XYSubject, "feature", "value", 2:562)
+
+#Select mean and sd columns
+mean_and_std <- select(tidyXYSubject, contains("mean"), contains("std"))
 
 #Summarize statistics by activity & statistical feature
 tidyXYSubject2 <- tidyXYSubject %>% group_by(activityName, feature) %>% summarise(mean = mean(value))
